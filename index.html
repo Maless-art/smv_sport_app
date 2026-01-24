@@ -387,6 +387,26 @@ html, body{
 body::-webkit-scrollbar{
   display:none;
 }
+/* ===== FIX: header de Equipos en móvil (botones no se esconden) ===== */
+.hd{
+  flex-wrap: wrap;              /* permite que el header haga 2 líneas */
+  align-items: flex-start;
+}
+
+.hd > div:last-child{
+  flex-wrap: wrap;              /* el grupo de botones también hace wrap */
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+@media (max-width: 520px){
+  .hd .btn{
+    padding: 9px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+}
 
 </style>
 </head>
