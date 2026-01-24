@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SMV • Simplemente Viejos</title>
+<meta name="theme-color" content="#07140e" />
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMV">
+
 <link rel="apple-touch-icon" href="smv-512-icon.png">
 <link rel="icon" type="image/png" href="smv-512-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,6 +27,11 @@
       --shadow: 0 14px 40px rgba(0,0,0,.45);
       --r:18px;
     }
+html, body{
+  background: #07140e; /* IMPORTANTÍSIMO para que iOS no la ponga blanca */
+}
+.wrap{ padding-top: env(safe-area-inset-top); }
+
     *{box-sizing:border-box}
     body{
       margin:0;
