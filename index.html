@@ -345,6 +345,30 @@
   z-index:2;
 }
 
+body{
+  background:
+    radial-gradient(1200px 600px at 20% 0%, rgba(24,194,110,.18), transparent 60%),
+    linear-gradient(180deg, #030906, #020604);
+  padding:28px;
+}
+
+/* CONTENEDOR DE APP */
+.app-shell{
+  max-width:1200px;
+  margin:0 auto;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border-radius:28px;
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+html, body{
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar{
+  display:none;
+}
 
 </style>
 </head>
