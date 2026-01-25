@@ -387,9 +387,6 @@ body::-webkit-scrollbar{
   gap: 8px;
   width: 100%;
 }
-
-
-
   .app-shell{
     border-radius:20px;
   }
@@ -401,6 +398,19 @@ body::-webkit-scrollbar{
 @media (max-width: 520px){
   body{ padding:8px; }   /* antes 14 */
   .wrap{ padding:8px; }  /* antes 12 */
+}
+@media (max-width: 520px){
+  .card{ overflow: visible; }     /* evita que recorte el borde del input */
+  .content{ overflow-x:hidden; }  /* para que nada cree scroll horizontal */
+
+  input{ max-width:100%; }
+
+  input[type="date"],
+  input[type="time"]{
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right:16px;           /* espacio extra para el control de iOS */
+  }
 }
 
 </style>
@@ -415,7 +425,7 @@ body::-webkit-scrollbar{
         <img src="smv-app-icon.png" alt="SMV" class="logoSMV">
         <div>
           <div style="font-size:22px;font-weight:900;letter-spacing:.5px;">Simplemente Viejos</div>
-          <div style="margin-top:4px;color:var(--muted);font-size:13px;">Registro de birrias</div>
+          <div style="margin-top:4px;color:var(--muted);font-size:16px;">Registro de birrias</div>
 <span class="appVersion">v1.0.0</span>
        
  </div>
