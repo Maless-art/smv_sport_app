@@ -329,7 +329,7 @@ html, body{
 .topbar-watermark{
   position:absolute;
   top:50%;
-  right:-550px;            /* 👈 empújalo fuerte a la derecha */
+  right:-450px;            /* 👈 empújalo fuerte a la derecha */
   width:820px;             /* 👈 mucho más grande */
   height:320px;
   transform:translateY(-50%);
@@ -347,21 +347,9 @@ html, body{
   z-index:2;
 }
 .topbar::after{
-  content:"";
-  position:absolute;
-  top:0;
-  right:0;
-  width:250px;
-  height:100%;
-  background:linear-gradient(
-    to right,
-    rgba(8,25,18,0),
-    rgba(8,25,18,0.65),
-    rgba(8,25,18,1)
-  );
-  pointer-events:none;
-  z-index:2;
+  z-index:1;
 }
+
 
 body{
   background:
