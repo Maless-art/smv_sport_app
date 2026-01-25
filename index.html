@@ -92,6 +92,7 @@ html, body{
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.04);
       white-space:nowrap;
+
     }
     .cardTitle{font-size:22px;font-weight:900;letter-spacing:.4px}
 
@@ -115,7 +116,10 @@ html, body{
 
     .content{padding:16px}
     .row2{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
-    @media (max-width: 720px){ .row2{grid-template-columns:1fr} }
+@media (max-width: 720px){
+  .row2{grid-template-columns:1fr}
+}
+
 
     label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px}
     input{
@@ -339,8 +343,6 @@ html, body{
   z-index:1;
 }
 
-
-
 .topbar .brand,
 .topbar .appVersion{
   position:relative;
@@ -349,7 +351,6 @@ html, body{
 .topbar::after{
   z-index:1;
 }
-
 
 body{
   background:
@@ -387,10 +388,10 @@ body::-webkit-scrollbar{
   gap: 8px;
   width: 100%;
 }
-  .app-shell{
-    border-radius:20px;
-  }
+@media (max-width: 520px){
+  .app-shell{ border-radius:20px; }
 }
+
 @media (max-width: 520px){
   body{ padding:8px; }   /* antes 14 */
   .wrap{ padding:8px; }  /* antes 12 */
@@ -412,11 +413,162 @@ body::-webkit-scrollbar{
     padding-right:16px;           /* espacio extra para el control de iOS */
   }
 }
+/* ===== SPLASH (PASO 1) ===== */
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(900px 520px at 20% 0%, rgba(24,194,110,.16), transparent 60%),
+    linear-gradient(180deg, #050f0b 0%, #07140e 60%, #040b08 100%);
+}
+
+@keyframes heartBeat{
+  0%   { transform: scale(1); }
+  15%  { transform: scale(1.10); }
+  30%  { transform: scale(1.00); }
+  45%  { transform: scale(1.08); }
+  60%  { transform: scale(1.00); }
+  100% { transform: scale(1.00); }
+}
+
+.splash{
+  flex-direction: column;
+}
+
+.splash-logo{
+  width:min(180px, 46vw);
+  height:auto;
+  display:block;
+  filter:
+    drop-shadow(0 18px 40px rgba(0,0,0,.55))
+    drop-shadow(0 0 26px rgba(24,194,110,.60));
+
+  animation: heartBeat 1.05s ease-in-out infinite;
+  transform-origin:center;
+  will-change: transform;
+}
+
+
+.loader-bar{
+  width:100% !important;
+  display:block !important;
+  height:12px !important;
+  background:rgba(255,255,255,.18) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  border-radius:999px !important;
+  overflow:hidden !important;
+}
+
+.loader-fill{
+  width:0%;
+  height:100% !important;
+  display:block !important;
+  background:linear-gradient(90deg, #18c26e, #2ee59d) !important;
+}
+/* ===== BOTONES – animación global ===== */
+button,
+.btn{
+  transition:
+    transform .12s ease,
+    box-shadow .12s ease,
+    background .18s ease,
+    border-color .18s ease;
+  will-change: transform;
+}
+
+/* hover (desktop) */
+@media (hover:hover){
+  button:hover,
+  .btn:hover{
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 8px 22px rgba(0,0,0,.35);
+  }
+}
+
+
+/* active / tap (mobile + desktop) */
+button:active,
+.btn:active{
+  transform: translateY(1px) scale(.98);
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+/* ===== FIX ESPACIADO: SMV + tagline lejos de la barra ===== */
+
+/* ===== SPLASH (SPACING FINAL) ===== */
+.splash-text{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;              /* SMV + tagline pegados */
+  margin:18px 0 14px;   /* 👈 14px separa texto de la barra */
+}
+
+.splash-name{
+  margin:0;
+  font-size:56px;
+  font-weight:900;
+  letter-spacing:10px;
+  line-height:1;
+  color:var(--white);
+  text-align:center;
+}
+
+.splash-tagline{
+  margin:0;
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.8px;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* ===== SPLASH LOADER (FINAL) ===== */
+.splash-loader{
+  width:min(340px, 82vw);
+  margin-inline:auto;
+  margin-top:0;         
+}
+
+.loader-bar{ width:100%; }
+
 
 </style>
 </head>
 
 <body>
+<!-- SPLASH (PASO 1 y 2) -->
+
+  <div class="splash-text">
+    <h1 class="splash-name">SMV</h1>
+    <div class="splash-tagline">El fútbol no tiene edad</div>
+  </div>
+</div>
+
+<div id="splash" class="splash">
+  <img src="./smv-app-icon.png" alt="SMV" class="splash-logo">
+
+  <div class="splash-text">
+    <h1 class="splash-name">SMV</h1>
+    <div class="splash-tagline">El fútbol no tiene edad</div>
+  </div>
+
+  <div class="splash-loader">
+    <div class="loader-bar">
+      <div class="loader-fill" id="loaderFill"></div>
+    </div>
+    <div class="loader-percent" id="loaderPercent">0%</div>
+  </div>
+
+  <div class="splash-msg" id="splashMsg">embaturrando cofal…</div>
+</div>
+
+</div>
+
   <div class="wrap">
     <header class="topbar">
       <div class="brand">
@@ -1122,5 +1274,62 @@ tabCobro.addEventListener("click", () => switchTab("cobro"));
   init();
 })();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (window.__SMV_SPLASH_DONE__) return;
+  window.__SMV_SPLASH_DONE__ = true;
+
+  const fill   = document.getElementById('loaderFill');
+  const pct    = document.getElementById('loaderPercent');
+  const msg    = document.getElementById('splashMsg');
+  const splash = document.getElementById('splash');
+
+  const messages = [
+    "embaturrando cofal…",
+    "estirando músculos atrofiados…",
+        "listos para la birria 🍻"
+  ];
+
+  let p = 0;
+  let m = 0;
+
+  const duration = 5000;
+  const step = 50;
+  const inc = 100 / (duration / step);
+
+  msg.textContent = messages[0];
+
+  const msgTimer = setInterval(() => {
+    m = Math.min(messages.length - 1, m + 1);
+
+    msg.textContent = messages[m];
+  }, 1950);
+
+  const timer = setInterval(() => {
+    p = Math.min(100, p + inc);
+    fill.style.width = p + '%';
+    pct.textContent = Math.round(p) + '%';
+
+    if (p >= 100) {
+      clearInterval(timer);
+      clearInterval(msgTimer);
+
+      splash.style.transition = "opacity .4s ease";
+      splash.style.opacity = 0;
+
+      setTimeout(() => {
+        splash.style.display = "none";
+      }, 400);
+    }
+  }, step);
+
+});
+</script>
+
+
+
+
+
 </body>
 </html>
