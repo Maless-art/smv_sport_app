@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMV • Simplemente Viejos</title>
+<meta name="theme-color" content="#07140e" />
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMV">
+
+<link rel="apple-touch-icon" href="smv-512-icon.png">
+<link rel="icon" type="image/png" href="smv-512-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMV">
+
+  <style>
+    :root{
+      --bg:#07140e;
+      --green:#18c26e;
+      --white:#f3fff9;
+      --muted:#a8c7b8;
+      --stroke:rgba(255,255,255,.10);
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --r:18px;
+    }
+html, body{
+  background: #07140e; /* IMPORTANTÍSIMO para que iOS no la ponga blanca */
+}
+.wrap{ padding-top: env(safe-area-inset-top); }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+      background:
+        radial-gradient(1000px 520px at 20% 0%, rgba(24,194,110,.15), transparent 60%),
+        radial-gradient(900px 520px at 90% 10%, rgba(255,255,255,.06), transparent 55%),
+        linear-gradient(180deg, #050f0b 0%, var(--bg) 55%, #040b08 100%);
+      color:var(--white);
+      min-height:100vh;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+
+    .topbar{
+      display:flex;align-items:center;justify-content:flex-start;gap:12px;
+      padding:14px 16px;border:1px solid var(--stroke);
+      border-radius:calc(var(--r) + 8px);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logoSMV{
+      width:80px;height:80px;object-fit:contain;border-radius:12px;
+    }
+
+    .tabs{display:flex;gap:10px;align-items:center;margin-top:14px}
+    .tab{
+      padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);font-weight:900;font-size:13px;cursor:pointer;
+    }
+    .tab.active{
+      color:var(--white);
+      border-color: rgba(24,194,110,.55);
+      background:linear-gradient(180deg, rgba(24,194,110,.22), rgba(24,194,110,.08));
+    }
+
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+    .card{
+      border:1px solid var(--stroke);
+      border-radius:var(--r);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hd{
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+    }
+    .title{display:flex;flex-direction:column;gap:6px}
+    .title span{font-size:12px;color:var(--muted)}
+    .pill{
+      font-size:11px;color:var(--white);
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      white-space:nowrap;
+
+    }
+    .cardTitle{font-size:22px;font-weight:900;letter-spacing:.4px}
+
+    .btn{
+      padding:10px 14px;border-radius:12px;border:1px solid rgba(24,194,110,.55);
+      background:linear-gradient(180deg, rgba(24,194,110,.28), rgba(24,194,110,.10));
+      color:var(--white);font-weight:900;font-size:13px;cursor:pointer;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btnGhost{
+      border-color:var(--stroke);
+      background:rgba(255,255,255,.03);
+      font-weight:900;
+    }
+    .btnDanger{
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.85);
+      font-weight:900;
+    }
+
+    .content{padding:16px}
+    .row2{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
+@media (max-width: 720px){
+  .row2{grid-template-columns:1fr}
+}
+
+
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--white);
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(24,194,110,.55);
+      box-shadow:0 0 0 3px rgba(24,194,110,.12)
+    }
+    .sectionTitle{
+      margin:16px 0 10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      color:var(--muted);font-weight:900;font-size:12px;letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+    .inputsGrid{display:grid;grid-template-columns:1fr;gap:10px}
+
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      background:rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--white);
+      padding:10px 12px;border-radius:14px;
+      box-shadow:var(--shadow);
+      opacity:0;pointer-events:none;
+      transition:opacity .18s ease;
+      font-size:13px;font-weight:900;
+      max-width:min(520px, calc(100vw - 28px));
+      text-align:center;
+      backdrop-filter: blur(10px);
+    }
+    .toast.show{opacity:1}
+
+    /* Equipos */
+    .gkBox{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+    }
+    .divider{height:1px;background:rgba(255,255,255,.08); margin:14px 0}
+    .teamsGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 900px){ .teamsGrid{grid-template-columns:1fr} }
+
+    .teamCard{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+    }
+    .teamHead{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .teamHead b{font-size:13px;letter-spacing:.3px}
+    .tag{
+      font-size:11px;font-weight:900;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(24,194,110,.55);
+      background:rgba(24,194,110,.12);
+    }
+    .list{display:grid;gap:8px}
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:10px 10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      font-weight:800;
+    }
+    .muted{color:var(--muted);font-weight:900;font-size:12px}
+
+    .kitSelect{
+      background:rgba(0,0,0,.25);
+      color:var(--white);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:10px;
+      padding:6px 8px;
+      font-weight:800;
+      font-size:12px;
+    }
+    .kitSelect option{ color:#000; }
+    .kitDot{
+      width:14px;height:14px;border-radius:999px;display:inline-block;
+      border:1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 3px rgba(0,0,0,.18) inset;
+    }
+
+    /* Cobro */
+    .fee-wrap{display:flex;align-items:center;gap:10px;}
+    .fee-wrap label{opacity:.85;font-size:.95rem;}
+    .fee-wrap input{
+      width:140px;padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);color:#fff;
+    }
+    .table-wrap{ margin-top:14px; overflow:auto; }
+    .pay-table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
+    .pay-table thead th{ text-align:left; font-weight:700; opacity:.9; padding:8px 10px; }
+    .pay-table thead .subhead th{ font-weight:600; opacity:.75; padding-top:0; }
+    .pay-table tbody td{
+      padding:10px;background:rgba(0,0,0,.20);
+      border-top:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .pay-table tbody tr td:first-child{
+      border-left:1px solid rgba(255,255,255,.08);
+      border-top-left-radius:14px;border-bottom-left-radius:14px;
+      width:48px;opacity:.9;
+    }
+    .pay-table tbody tr td:last-child{
+      border-right:1px solid rgba(255,255,255,.08);
+      border-top-right-radius:14px;border-bottom-right-radius:14px;
+      width:110px;font-weight:800;
+    }
+    .pay-in{
+      width:110px;padding:10px 10px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);color:#fff;
+    }
+    .saldo-cell{ font-variant-numeric: tabular-nums; }
+    .tfoot-label{ text-align:right; padding:10px; opacity:.85; }
+    .tfoot-value{ font-weight:900; font-variant-numeric: tabular-nums; padding:10px; }
+    .total-ok{ color:#2ee59d; }
+    .total-bad{ color:#ff5a5a; }
+/* COBRO – mejoras visuales */
+.pay-table thead th:nth-child(1),
+.pay-table tbody td:nth-child(1){ width:52px; text-align:center; }
+
+.pay-table thead th:nth-child(3),
+.pay-table thead th:nth-child(4),
+.pay-table tbody td:nth-child(3),
+.pay-table tbody td:nth-child(4){ width:130px; }
+
+.pay-table thead th:last-child,
+.pay-table tbody td:last-child{ width:120px; text-align:right; }
+
+.pay-table tbody td:nth-child(3),
+.pay-table tbody td:nth-child(4){ text-align:right; }
+
+.pay-in{
+  width:100%;
+  text-align:right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pay-table tbody td:nth-child(2){
+  font-weight:850;
+}
+
+.pay-table tbody tr:hover td{
+  border-color: rgba(24,194,110,.35);
+}
+  .pay-table thead th[colspan="2"]{ text-align:center; }
+.pay-table thead .subhead th{ text-align:center; }
+.pay-table thead .subhead th:nth-child(1),
+.pay-table thead .subhead th:nth-child(2){ text-align:left; }
+.appVersion{
+  margin-left:auto;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.6px;
+  color:var(--muted);
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.03);
+}
+.topbar{
+  position: relative;
+  overflow: hidden;
+  display:flex;align-items:center;justify-content:flex-start;gap:12px;
+  padding:14px 16px;border:1px solid var(--stroke);
+  border-radius:calc(var(--r) + 8px);
+
+  /* ✅ Fondo base + imagen watermark suave */
+  background:
+    radial-gradient(520px 240px at 72% 52%, rgba(0,0,0,.28), transparent 72%),
+
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+    url("futbol-watermark.jpg");
+
+  background-repeat: no-repeat;
+  background-position: 72% 52%, 0 0, 72% 52%;
+
+  background-size: 560px 260px, auto, 420px auto;
+
+
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+
+.topbar{
+  position: relative;
+  overflow: hidden;
+}
+
+.topbar-watermark{
+  position:absolute;
+  top:50%;
+  right:-450px;            /* 👈 empújalo fuerte a la derecha */
+  width:820px;             /* 👈 mucho más grande */
+  height:320px;
+  transform:translateY(-50%);
+  background:url("futbol-watermark.png") no-repeat center / contain;
+  opacity:0.22;
+  pointer-events:none;
+  z-index:1;
+}
+
+.topbar .brand,
+.topbar .appVersion{
+  position:relative;
+  z-index:2;
+}
+.topbar::after{
+  z-index:1;
+}
+
+body{
+  background:
+    radial-gradient(1200px 600px at 20% 0%, rgba(24,194,110,.18), transparent 60%),
+    linear-gradient(180deg, #030906, #020604);
+  padding:28px;
+}
+
+/* CONTENEDOR DE APP */
+.app-shell{
+  max-width:1200px;
+  margin:0 auto;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border-radius:28px;
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+html, body{
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar{
+  display:none;
+}
+/* ===== FIX: header de Equipos en móvil (botones no se esconden) ===== */
+.hd{
+  flex-wrap: wrap;              /* permite que el header haga 2 líneas */
+  align-items: flex-start;
+}
+
+.hd > div:last-child{
+  flex-wrap: wrap;              /* el grupo de botones también hace wrap */
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+@media (max-width: 520px){
+  .app-shell{ border-radius:20px; }
+}
+
+@media (max-width: 520px){
+  body{ padding:8px; }   /* antes 14 */
+  .wrap{ padding:8px; }  /* antes 12 */
+}
+@media (max-width: 520px){
+  body{ padding:8px; }   /* antes 14 */
+  .wrap{ padding:8px; }  /* antes 12 */
+}
+@media (max-width: 520px){
+  .card{ overflow: visible; }     /* evita que recorte el borde del input */
+  .content{ overflow-x:hidden; }  /* para que nada cree scroll horizontal */
+
+  input{ max-width:100%; }
+
+  input[type="date"],
+  input[type="time"]{
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right:16px;           /* espacio extra para el control de iOS */
+  }
+}
+/* ===== SPLASH (PASO 1) ===== */
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(900px 520px at 20% 0%, rgba(24,194,110,.16), transparent 60%),
+    linear-gradient(180deg, #050f0b 0%, #07140e 60%, #040b08 100%);
+}
+
+@keyframes heartBeat{
+  0%   { transform: scale(1); }
+  15%  { transform: scale(1.10); }
+  30%  { transform: scale(1.00); }
+  45%  { transform: scale(1.08); }
+  60%  { transform: scale(1.00); }
+  100% { transform: scale(1.00); }
+}
+
+.splash{
+  flex-direction: column;
+}
+
+.splash-logo{
+  width:min(180px, 46vw);
+  height:auto;
+  display:block;
+  filter:
+    drop-shadow(0 18px 40px rgba(0,0,0,.55))
+    drop-shadow(0 0 26px rgba(24,194,110,.60));
+
+  animation: heartBeat 1.05s ease-in-out infinite;
+  transform-origin:center;
+  will-change: transform;
+}
+
+
+.loader-bar{
+  width:100% !important;
+  display:block !important;
+  height:12px !important;
+  background:rgba(255,255,255,.18) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  border-radius:999px !important;
+  overflow:hidden !important;
+}
+
+.loader-fill{
+  width:0%;
+  height:100% !important;
+  display:block !important;
+  background:linear-gradient(90deg, #18c26e, #2ee59d) !important;
+}
+/* ===== BOTONES – animación global ===== */
+button,
+.btn{
+  transition:
+    transform .12s ease,
+    box-shadow .12s ease,
+    background .18s ease,
+    border-color .18s ease;
+  will-change: transform;
+}
+
+/* hover (desktop) */
+@media (hover:hover){
+  button:hover,
+  .btn:hover{
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 8px 22px rgba(0,0,0,.35);
+  }
+}
+
+
+/* active / tap (mobile + desktop) */
+button:active,
+.btn:active{
+  transform: translateY(1px) scale(.98);
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+/* ===== FIX ESPACIADO: SMV + tagline lejos de la barra ===== */
+
+/* ===== SPLASH (SPACING FINAL) ===== */
+.splash-text{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;              /* SMV + tagline pegados */
+  margin:18px 0 14px;   /* 👈 14px separa texto de la barra */
+}
+
+.splash-name{
+  margin:0;
+  font-size:56px;
+  font-weight:900;
+  letter-spacing:10px;
+  line-height:1;
+  color:var(--white);
+  text-align:center;
+}
+
+.splash-tagline{
+  margin:0;
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.8px;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* ===== SPLASH LOADER (FINAL) ===== */
+.splash-loader{
+  width:min(340px, 82vw);
+  margin-inline:auto;
+  margin-top:0;         
+}
+
+.loader-bar{ width:100%; }
+
+
+</style>
+</head>
+
+<body>
+<!-- SPLASH (PASO 1 y 2) -->
+
+  <div class="splash-text">
+    <h1 class="splash-name">SMV</h1>
+    <div class="splash-tagline">El fútbol no tiene edad</div>
+  </div>
+</div>
+
+<div id="splash" class="splash">
+  <img src="./smv-app-icon.png" alt="SMV" class="splash-logo">
+
+  <div class="splash-text">
+    <h1 class="splash-name">SMV</h1>
+    <div class="splash-tagline">El fútbol no tiene edad</div>
+  </div>
+
+  <div class="splash-loader">
+    <div class="loader-bar">
+      <div class="loader-fill" id="loaderFill"></div>
+    </div>
+    <div class="loader-percent" id="loaderPercent">0%</div>
+  </div>
+
+  <div class="splash-msg" id="splashMsg">embaturrando cofal…</div>
+</div>
+
+</div>
+
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+<div class="topbar-watermark"></div>
+
+        <img src="smv-app-icon.png" alt="SMV" class="logoSMV">
+        <div>
+          <div style="font-size:22px;font-weight:900;letter-spacing:.5px;">Simplemente Viejos</div>
+          <div style="margin-top:4px;color:var(--muted);font-size:16px;">Registro de birrias</div>
+<span class="appVersion">v1.0.0</span>
+       
+ </div>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" id="tabLista">Lista</button>
+      <button class="tab" id="tabEquipos">Equipos</button>
+      <button class="tab" id="tabCobro">Cobro</button>
+    </nav>
+
+    <main class="grid">
+      <!-- LISTA -->
+      <section class="card" id="viewLista">
+        <div class="hd">
+          <div class="title">
+            <b class="cardTitle">Lista de jugadores</b>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span class="pill" id="countPill">0/20</span>
+            <button class="btn" id="btnSortear">Sortear Equipos</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="row2">
+            <div>
+              <label for="matchDate">Fecha</label>
+              <input type="date" id="matchDate" />
+            </div>
+            <div>
+              <label for="matchTime">Hora</label>
+              <input type="time" id="matchTime" />
+            </div>
+          </div>
+
+          <div class="sectionTitle">
+            <span>Porteros (2)</span>
+            <button class="btn btnGhost" id="btnGuardar">Guardar</button>
+          </div>
+          <div class="inputsGrid" id="gkGrid"></div>
+
+          <div class="sectionTitle"><span>Jugadores (18)</span></div>
+          <div class="inputsGrid" id="plGrid"></div>
+        </div>
+      </section>
+
+      <!-- EQUIPOS -->
+      <section class="card" id="viewEquipos" style="display:none">
+        <div class="hd">
+          <div class="title">
+            <b class="cardTitle">Equipos</b>
+            <span id="equiposMeta">Aún no hay sorteo</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button class="btn btnGhost" id="btnReSortear">Re-sortear</button>
+            <button class="btn" id="btnExport">Exportar</button>
+            <button class="btn btnDanger" id="btnReset">Reset</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="gkBox">
+            <div class="muted">PORTEROS (fijos)</div>
+            <div class="list" style="margin-top:10px">
+              <div class="item"><span>1) 🧤 <b id="gkName1">(vacío)</b></span></div>
+              <div class="item"><span>2) 🧤 <b id="gkName2">(vacío)</b></span></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="teamsGrid">
+            <div class="teamCard">
+              <div class="teamHead">
+                <b>Equipo 1</b>
+                <span class="kitDot" id="kitDot1" aria-hidden="true"></span>
+                <select class="kitSelect" id="kit1">
+                  <option value="">Uniforme</option>
+                  <option value="red">Rojo</option>
+                  <option value="blue">Azul</option>
+                  <option value="yellow">Amarillo</option>
+                  <option value="white">Blanco</option>
+                  <option value="black">Negro</option>
+                </select>
+                <span class="tag" id="tag1">6</span>
+              </div>
+              <div class="list" id="list1"></div>
+            </div>
+
+            <div class="teamCard">
+              <div class="teamHead">
+                <b>Equipo 2</b>
+                <span class="kitDot" id="kitDot2" aria-hidden="true"></span>
+                <select class="kitSelect" id="kit2">
+                  <option value="">Uniforme</option>
+                  <option value="red">Rojo</option>
+                  <option value="blue">Azul</option>
+                  <option value="yellow">Amarillo</option>
+                  <option value="white">Blanco</option>
+                  <option value="black">Negro</option>
+                </select>
+                <span class="tag" id="tag2">6</span>
+              </div>
+              <div class="list" id="list2"></div>
+            </div>
+
+            <div class="teamCard">
+              <div class="teamHead">
+                <b>Equipo 3</b>
+                <span class="kitDot" id="kitDot3" aria-hidden="true"></span>
+                <select class="kitSelect" id="kit3">
+                  <option value="">Uniforme</option>
+                  <option value="red">Rojo</option>
+                  <option value="blue">Azul</option>
+                  <option value="yellow">Amarillo</option>
+                  <option value="white">Blanco</option>
+                  <option value="black">Negro</option>
+                </select>
+                <span class="tag" id="tag3">6</span>
+              </div>
+              <div class="list" id="list3"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COBRO -->
+      <section class="card" id="viewCobro" style="display:none">
+        <div class="hd">
+          <div class="title">
+            <b class="cardTitle">Cobro</b>
+            <span>Cuota + pagos por jugador</span>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="fee-wrap">
+            <label for="feeInput">Cuota del día</label>
+            <input id="feeInput" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00">
+          </div>
+
+          <div class="table-wrap">
+            <table class="pay-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Jugador</th>
+                  <th colspan="2">Pagó</th>
+                  <th>Saldo</th>
+                </tr>
+                <tr class="subhead">
+                  <th></th><th></th>
+                  <th>Efectivo</th>
+                  <th>Yappy</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="payTbody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" class="tfoot-label">Total saldo</td>
+                  <td id="totalSaldo" class="tfoot-value">0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const LS_KEY = "SMV_v3";
+  const PLAYERS_COUNT = 18; // 18 jugadores + 2 porteros = 20
+  const TEAMS = 3;
+  const PER_TEAM = 6;
+  const COBRO_COUNT = 20;
+
+  const $ = (id) => document.getElementById(id);
+
+  // tabs + views
+  const tabLista = $("tabLista");
+  const tabEquipos = $("tabEquipos");
+  const tabCobro = $("tabCobro");
+
+  const viewLista = $("viewLista");
+  const viewEquipos = $("viewEquipos");
+  const viewCobro = $("viewCobro");
+
+  // lista UI
+  const matchDate = $("matchDate");
+  const matchTime = $("matchTime");
+  const gkGrid = $("gkGrid");
+  const plGrid = $("plGrid");
+  const countPill = $("countPill");
+  const toast = $("toast");
+  const btnGuardar = $("btnGuardar");
+  const btnSortear = $("btnSortear");
+
+  // equipos UI
+  const equiposMeta = $("equiposMeta");
+  const btnReSortear = $("btnReSortear");
+  const btnReset = $("btnReset");
+  const btnExport = $("btnExport");
+
+  const gkName1 = $("gkName1");
+  const gkName2 = $("gkName2");
+  const list1 = $("list1");
+  const list2 = $("list2");
+  const list3 = $("list3");
+  const tag1 = $("tag1");
+  const tag2 = $("tag2");
+  const tag3 = $("tag3");
+
+  const kit1 = $("kit1");
+  const kit2 = $("kit2");
+  const kit3 = $("kit3");
+  const kitDot1 = $("kitDot1");
+  const kitDot2 = $("kitDot2");
+  const kitDot3 = $("kitDot3");
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(()=> toast.classList.remove("show"), 1600);
+  }
+
+  function defaultDate(){
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,"0");
+    const dd = String(now.getDate()).padStart(2,"0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function readState(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY)) || null; }
+    catch(_){ return null; }
+  }
+  function writeState(state){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+  function applyKitDot(dotEl, value){
+    if(!dotEl) return;
+    const map = { red:"red", blue:"deepskyblue", yellow:"gold", white:"white", black:"black" };
+    dotEl.style.background = map[value] || "rgba(255,255,255,.08)";
+    dotEl.style.borderColor = value ? "rgba(255,255,255,.45)" : "rgba(255,255,255,.25)";
+  }
+
+  function makeInput(id, placeholder){
+    const el = document.createElement("input");
+    el.type = "text";
+    el.id = id;
+    el.placeholder = placeholder;
+    el.autocomplete = "off";
+    el.spellcheck = false;
+    el.addEventListener("input", () => {
+      saveDraft();
+      updateCount();
+      renderEquipos();
+    });
+    return el;
+  }
+
+  function getFromUI(){
+    const gks = [ $("gk1").value.trim(), $("gk2").value.trim() ];
+    const players = [];
+    for(let i=1;i<=PLAYERS_COUNT;i++) players.push($("p"+i).value.trim());
+    return { gks, players };
+  }
+
+  function saveDraft(){
+    const st = readState() || {};
+    const { gks, players } = getFromUI();
+    st.match = { date: matchDate.value || "", time: matchTime.value || "" };
+    st.gks = gks;
+    st.players = players;
+    st.kits = {
+      team1: kit1?.value || "",
+      team2: kit2?.value || "",
+      team3: kit3?.value || ""
+    };
+    writeState(st);
+  }
+
+  function updateCount(){
+    const { gks, players } = getFromUI();
+    const filled = [...gks, ...players].filter(v => v && v.length>0).length;
+    countPill.textContent = `${filled}/20`;
+  }
+
+  function setUIFromState(st){
+    if(st?.match){
+      if(st.match.date) matchDate.value = st.match.date;
+      if(st.match.time) matchTime.value = st.match.time;
+    }
+    if(Array.isArray(st?.gks)){
+      $("gk1").value = st.gks[0] || "";
+      $("gk2").value = st.gks[1] || "";
+    }
+    if(Array.isArray(st?.players)){
+      for(let i=1;i<=PLAYERS_COUNT;i++){
+        $("p"+i).value = st.players[i-1] || "";
+      }
+    }
+    if(st?.kits){
+      if(kit1) kit1.value = st.kits.team1 || "";
+      if(kit2) kit2.value = st.kits.team2 || "";
+      if(kit3) kit3.value = st.kits.team3 || "";
+    }
+    applyKitDot(kitDot1, kit1?.value);
+    applyKitDot(kitDot2, kit2?.value);
+    applyKitDot(kitDot3, kit3?.value);
+    updateCount();
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function validateFull(st){
+    const gks = (st.gks||[]).map(x => (x||"").trim()).filter(Boolean);
+    const players = (st.players||[]).map(x => (x||"").trim()).filter(Boolean);
+    if(gks.length !== 2) return { ok:false, msg:`Faltan porteros: ${gks.length}/2` };
+    if(players.length !== PLAYERS_COUNT) return { ok:false, msg:`Faltan jugadores: ${players.length}/${PLAYERS_COUNT}` };
+    return { ok:true };
+  }
+
+  function generateSorteoSlots(){
+    saveDraft();
+    const st = readState() || {};
+    const valid = validateFull(st);
+    if(!valid.ok){ showToast(valid.msg); return false; }
+
+    const slots = shuffle([...Array(PLAYERS_COUNT).keys()]);
+    st.sorteo = {
+      slotsEquipo1: slots.slice(0, PER_TEAM),
+      slotsEquipo2: slots.slice(PER_TEAM, PER_TEAM*2),
+      slotsEquipo3: slots.slice(PER_TEAM*2, PER_TEAM*3),
+      generatedAt: new Date().toISOString()
+    };
+    writeState(st);
+    showToast("Equipos generados ✅");
+    renderEquipos();
+    return true;
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function renderListFromSlots(container, slots, players){
+    container.innerHTML = "";
+    slots.forEach((slotIndex, idx) => {
+      const name = players[slotIndex] || "";
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `<span>${idx+1}) ${escapeHtml(name || "(vacío)")}</span>`;
+      container.appendChild(div);
+    });
+  }
+
+  function renderEquipos(){
+    const st = readState() || {};
+    const sorteo = st.sorteo;
+
+    const gks = st.gks || ["",""];
+    gkName1.textContent = gks[0] ? gks[0] : "(vacío)";
+    gkName2.textContent = gks[1] ? gks[1] : "(vacío)";
+
+    if(!sorteo){
+      equiposMeta.textContent = "Aún no hay sorteo (usa ‘Sortear Equipos’)";
+      list1.innerHTML = list2.innerHTML = list3.innerHTML = "";
+      tag1.textContent = tag2.textContent = tag3.textContent = PER_TEAM;
+      return;
+    }
+
+    const when = new Date(sorteo.generatedAt);
+    equiposMeta.textContent = `Generado: ${when.toLocaleString()}`;
+
+    const players = st.players || Array(PLAYERS_COUNT).fill("");
+    renderListFromSlots(list1, sorteo.slotsEquipo1 || [], players);
+    renderListFromSlots(list2, sorteo.slotsEquipo2 || [], players);
+    renderListFromSlots(list3, sorteo.slotsEquipo3 || [], players);
+
+    tag1.textContent = (sorteo.slotsEquipo1||[]).length;
+    tag2.textContent = (sorteo.slotsEquipo2||[]).length;
+    tag3.textContent = (sorteo.slotsEquipo3||[]).length;
+
+    applyKitDot(kitDot1, kit1?.value);
+    applyKitDot(kitDot2, kit2?.value);
+    applyKitDot(kitDot3, kit3?.value);
+  }
+
+  function resetAll(){
+    const ok = confirm("¿Tay seguro que vas a volar la lista?\n\nBueno pues, cuidao.");
+    if(!ok) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+
+  function prettyDate(yyyyMMdd){
+    if(!yyyyMMdd) return "";
+    const [y,m,d] = yyyyMMdd.split("-").map(Number);
+    const dt = new Date(y, m-1, d);
+    return dt.toLocaleDateString("es-PA", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+  }
+  function prettyTime(hhmm){
+    if(!hhmm) return "";
+    const [h,mi] = hhmm.split(":").map(Number);
+    const dt = new Date(2000,0,1,h,mi);
+    return dt.toLocaleTimeString("es-PA", { hour:"numeric", minute:"2-digit" });
+  }
+  function kitEmoji(color){
+    const map = { red:"🔴", blue:"🔵", yellow:"🟡", white:"⚪", black:"⚫" };
+    return map[color] ? map[color] + " " : "";
+  }
+
+  function buildExportText(){
+    const st = readState() || {};
+    const rawDate = (st.match?.date || "").trim();
+    const rawTime = (st.match?.time || "").trim();
+    const header = `${prettyDate(rawDate)} – ${prettyTime(rawTime)}`;
+
+    const gks = st.gks || ["",""];
+    const p1 = gks[0] ? gks[0] : "(vacío)";
+    const p2 = gks[1] ? gks[1] : "(vacío)";
+
+    const sorteo = st.sorteo;
+    const players = st.players || Array(PLAYERS_COUNT).fill("");
+
+    const kits = st.kits || {};
+    const e1 = kitEmoji(kits.team1);
+    const e2 = kitEmoji(kits.team2);
+    const e3 = kitEmoji(kits.team3);
+
+    if(!sorteo){
+      return `${header}\nPorteros:\n🧤 ${p1}\n🧤 ${p2}\n\n(Sin sorteo aún)`;
+    }
+
+    const teamLines = (slots) => slots.map((idx) => players[idx] ? players[idx] : "(vacío)").join("\n");
+    const t1 = teamLines(sorteo.slotsEquipo1 || []);
+    const t2 = teamLines(sorteo.slotsEquipo2 || []);
+    const t3 = teamLines(sorteo.slotsEquipo3 || []);
+
+    return [
+      header,
+      "Porteros:",
+      `🧤 ${p1}`,
+      `🧤 ${p2}`,
+      "",
+      `${e1}Equipo 1`,
+      t1,
+      "",
+      `${e2}Equipo 2`,
+      t2,
+      "",
+      `${e3}Equipo 3`,
+      t3
+    ].join("\n");
+  }
+
+  // ---- COBRO ----
+  function ensureCobroState(st){
+    if(typeof st.fee !== "number") st.fee = 0;
+    if(!Array.isArray(st.payments) || st.payments.length !== COBRO_COUNT){
+      st.payments = Array(COBRO_COUNT).fill(null).map(()=>({cash:0, yappy:0}));
+    }
+    return st;
+  }
+  function n2(v){ const x = parseFloat(v); return Number.isFinite(x) ? x : 0; }
+  function fmt2(v){ return (Math.round(v*100)/100).toFixed(2); }
+
+  function getCobroNames(st){
+    const gks = st.gks || ["",""];
+    const players18 = st.players || Array(PLAYERS_COUNT).fill("");
+    const all = [
+      (gks[0] || "").trim(),
+      (gks[1] || "").trim(),
+      ...players18.map(x => (x||"").trim())
+    ];
+    while(all.length < COBRO_COUNT) all.push("");
+    return all.slice(0, COBRO_COUNT);
+  }
+
+  function renderCobro(){
+    let st = readState() || {};
+    st = ensureCobroState(st);
+    writeState(st);
+
+    const feeInput = $("feeInput");
+    const tbody = $("payTbody");
+    const totalEl = $("totalSaldo");
+    if(!feeInput || !tbody || !totalEl) return;
+
+    feeInput.value = fmt2(n2(st.fee));
+    const names = getCobroNames(st);
+
+    tbody.innerHTML = names.map((name, i) => {
+      const p = st.payments[i] || {cash:0, yappy:0};
+      return `
+        <tr data-i="${i}">
+          <td>${i+1}</td>
+          <td>${name || "(vacío)"}</td>
+          <td><input class="pay-in" type="number" inputmode="decimal" min="0" step="0.01" data-k="cash"  value="${fmt2(n2(p.cash))}"></td>
+          <td><input class="pay-in" type="number" inputmode="decimal" min="0" step="0.01" data-k="yappy" value="${fmt2(n2(p.yappy))}"></td>
+          <td class="saldo-cell" data-saldo>0.00</td>
+        </tr>
+      `;
+    }).join("");
+
+    if(!feeInput.dataset.bound){
+      feeInput.dataset.bound = "1";
+      feeInput.addEventListener("input", () => {
+        let st2 = readState() || {};
+        st2 = ensureCobroState(st2);
+        st2.fee = n2(feeInput.value);
+        writeState(st2);
+        recalcCobro();
+      });
+    }
+
+    if(!tbody.dataset.bound){
+      tbody.dataset.bound = "1";
+      tbody.addEventListener("input", (e) => {
+        const inp = e.target.closest("input.pay-in");
+        if(!inp) return;
+        const tr = inp.closest("tr");
+        const i = parseInt(tr.dataset.i, 10);
+        const k = inp.dataset.k;
+        let st2 = readState() || {};
+        st2 = ensureCobroState(st2);
+        st2.payments[i][k] = n2(inp.value);
+        writeState(st2);
+        recalcCobro();
+      });
+    }
+
+    recalcCobro();
+  }
+
+  function recalcCobro(){
+    const st = ensureCobroState(readState() || {});
+    const fee = n2(st.fee);
+
+    const tbody = $("payTbody");
+    const totalEl = $("totalSaldo");
+    if(!tbody || !totalEl) return;
+
+    let totalSaldo = 0;
+
+    [...tbody.querySelectorAll("tr")].forEach(tr => {
+      const i = parseInt(tr.dataset.i, 10);
+      const p = st.payments[i] || {cash:0, yappy:0};
+      const paid = n2(p.cash) + n2(p.yappy);
+      const saldo = fee - paid;
+      totalSaldo += saldo;
+     const cell = tr.querySelector("[data-saldo]");
+cell.textContent = fmt2(saldo);
+cell.style.color = (saldo > 0.0001) ? "#ff5a5a" : "#2ee59d";
+
+    });
+
+    totalEl.textContent = fmt2(totalSaldo);
+    totalEl.classList.remove("total-ok","total-bad");
+    if(Math.abs(totalSaldo) < 0.0001) totalEl.classList.add("total-ok");
+    else if(totalSaldo > 0) totalEl.classList.add("total-bad");
+    else totalEl.classList.add("total-ok");
+}
+  function switchTab(which){
+  const isLista   = which === "lista";
+  const isEquipos = which === "equipos";
+  const isCobro   = which === "cobro";
+
+  tabLista.classList.toggle("active", isLista);
+  tabEquipos.classList.toggle("active", isEquipos);
+  tabCobro.classList.toggle("active", isCobro);
+
+  viewLista.style.display   = isLista ? "" : "none";
+  viewEquipos.style.display = isEquipos ? "" : "none";
+  viewCobro.style.display   = isCobro ? "" : "none";
+
+  if(isEquipos) renderEquipos();
+  if(isCobro) renderCobro();
+}
+
+
+  function init(){
+    // build inputs
+    gkGrid.appendChild(makeInput("gk1","Ingrese nombre de portero"));
+    gkGrid.appendChild(makeInput("gk2","Ingrese nombre de portero"));
+    for(let i=1;i<=PLAYERS_COUNT;i++){
+      plGrid.appendChild(makeInput("p"+i,"Ingrese nombre de jugador"));
+kit1.addEventListener("change", () => { applyKitDot(kitDot1, kit1.value); saveDraft(); });
+kit2.addEventListener("change", () => { applyKitDot(kitDot2, kit2.value); saveDraft(); });
+kit3.addEventListener("change", () => { applyKitDot(kitDot3, kit3.value); saveDraft(); });
+
+
+    }
+
+    // defaults
+    const st = readState();
+    if(!st?.match?.date) matchDate.value = defaultDate();
+    if(!st?.match?.time) matchTime.value = "19:00"; // 7pm default (editable)
+
+    if(st) setUIFromState(st);
+    else { saveDraft(); updateCount(); }
+
+    matchDate.addEventListener("change", () => { saveDraft(); });
+    matchTime.addEventListener("change", () => { saveDraft(); });
+
+    btnGuardar.addEventListener("click", () => { saveDraft(); showToast("Guardado ✅"); });
+
+    btnSortear.addEventListener("click", () => {
+      const ok = generateSorteoSlots();
+      if(ok) switchTab("equipos");
+    });
+
+    let rsTimer = null;
+
+btnReSortear.addEventListener("mousedown", () => {
+  rsTimer = setTimeout(() => {
+    const ok = generateSorteoSlots();
+    if(ok) showToast("Re-sorteado ✅");
+  }, 1200);
+});
+
+btnReSortear.addEventListener("mouseup", () => {
+  clearTimeout(rsTimer);
+  rsTimer = null;
+});
+
+btnReSortear.addEventListener("mouseleave", () => {
+  clearTimeout(rsTimer);
+  rsTimer = null;
+});
+btnExport.addEventListener("click", async () => {
+  const text = buildExportText();
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast("Texto copiado ✅");
+  }catch(e){
+    // fallback por si el clipboard falla
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    showToast("Texto copiado ✅");
+  }
+});
+
+// móvil
+btnReSortear.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  rsTimer = setTimeout(() => {
+    const ok = generateSorteoSlots();
+    if(ok) showToast("Re-sorteado ✅");
+  }, 1200);
+}, { passive:false });
+
+btnReSortear.addEventListener("touchend", () => {
+  clearTimeout(rsTimer);
+  rsTimer = null;
+});
+
+
+    btnReset.addEventListener("click", resetAll);
+
+    tabLista.addEventListener("click", () => switchTab("lista"));
+    tabEquipos.addEventListener("click", () => switchTab("equipos"));
+tabCobro.addEventListener("click", () => switchTab("cobro"));
+
+
+    // render if already exists
+    renderEquipos();
+  }
+
+  init();
+})();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (window.__SMV_SPLASH_DONE__) return;
+  window.__SMV_SPLASH_DONE__ = true;
+
+  const fill   = document.getElementById('loaderFill');
+  const pct    = document.getElementById('loaderPercent');
+  const msg    = document.getElementById('splashMsg');
+  const splash = document.getElementById('splash');
+
+  const messages = [
+    "embaturrando cofal…",
+    "estirando músculos atrofiados…",
+        "listos para la birria 🍻"
+  ];
+
+  let p = 0;
+  let m = 0;
+
+  const duration = 5000;
+  const step = 50;
+  const inc = 100 / (duration / step);
+
+  msg.textContent = messages[0];
+
+  const msgTimer = setInterval(() => {
+    m = Math.min(messages.length - 1, m + 1);
+
+    msg.textContent = messages[m];
+  }, 1950);
+
+  const timer = setInterval(() => {
+    p = Math.min(100, p + inc);
+    fill.style.width = p + '%';
+    pct.textContent = Math.round(p) + '%';
+
+    if (p >= 100) {
+      clearInterval(timer);
+      clearInterval(msgTimer);
+
+      splash.style.transition = "opacity .4s ease";
+      splash.style.opacity = 0;
+
+      setTimeout(() => {
+        splash.style.display = "none";
+      }, 400);
+    }
+  }, step);
+
+});
+</script>
+
+
+
+
+
+</body>
+</html>
